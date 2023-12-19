@@ -14,6 +14,14 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("MyPolicyCors", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyMethod().WithOrigins("http://localhost:5173");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,6 +33,7 @@ if (app.Environment.IsDevelopment())
 app.UseHsts();
 app.UseHttpsRedirection();
 
+app.UseCors("MyPolicyCors");
 
 app.MapControllers();
 
